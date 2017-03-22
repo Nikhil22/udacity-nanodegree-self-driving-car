@@ -1,47 +1,28 @@
 #**Finding Lane Lines on the Road** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file. But feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Finding Lane Lines on the Road**
-
-The goals / steps of this project are the following:
-* Make a pipeline that finds lane lines on the road
-* Reflect on your work in a written report
-
-
-[//]: # (Image References)
-
-[image1]: ./examples/grayscale.jpg "Grayscale"
-
----
-
-### Reflection
-
-###1. Describe your pipeline. As part of the description, explain how you modified the draw_lines() function.
-
-My pipeline consisted of 5 steps. First, I converted the images to grayscale, then I .... 
-
-In order to draw a single line on the left and right lanes, I modified the draw_lines() function by ...
-
-If you'd like to include images to show how the pipeline works, here is how to include an image: 
-
-![alt text][image1]
-
-
-###2. Identify potential shortcomings with your current pipeline
-
-
-One potential shortcoming would be what would happen when ... 
-
-Another shortcoming could be ...
-
-
-###3. Suggest possible improvements to your pipeline
-
-A possible improvement would be to ...
-
-Another potential improvement could be to ...
+ "My pipeline consists of 5 main steps:\n",
+    "\n",
+    "1. Sanitize the image\n",
+    "    - Convert the image from RBG to grayscale. \n",
+    "    - Apply Gaussian blurring \n",
+    "2. Extract the edges using the canny method and mask the triangular region \n",
+    "    - For region masking, I did not want to simply hard-code the apex and left/right edge points. So, with some googling around and trial/error, I was able to generalize the region masking's apex, left/ and right coordinates.\n",
+    "3. Detect the lines using the Hough transform\n",
+    "    - I found that values like rho, theta, etc where quite elastic to change.\n",
+    "4. Extract the left and right lane markings\n",
+    "5. Paint the lines over the original image\n",
+    "\n",
+    "### Adjustments to draw_lines()\n",
+    "\n",
+    "I create a class called LaneFinder. This class has method called create_lines() which extrapolates left and right lines using their slopes.\n",
+    "A positive slope signifies a left lane line, and a negative one signifies a right lane lane. \n",
+    "\n",
+    "I use the results of this method and pass it to draw_lines().  I wanted my pipeline to look clean and semantic, so I put all methods in this LaneFinder class, and chained one method call after the next.\n",
+    "\n",
+    "### Shortcomings\n",
+    "1. We assume that nothing is obstructing the lane lines. Snow, a person,vehcile or any other object could hide part or all of a lane line. \n",
+    "2. This pipeline would not work well for a road with a curve. That is, a road with edges not triangular in shape would not be captured as well by this pipeline.  \n",
+    "\n",
+    "### Improvements\n",
+    "1. Instead of looking for lines, we could look for a general space in which a lane line is most likely to be. This approach would be robust when the lane is blocked by snow, a vehicle or a person.\n",
+    "2. We could modify Hough transform to detect curved lines, too. This would require us to add more dimensions to the Hough space."
