@@ -1,12 +1,11 @@
 #**Finding Lane Lines on the Road** 
 
- "My pipeline consists of 5 main steps:\n",
-    "\n",
-    "1. Sanitize the image\n",
-    "    - Convert the image from RBG to grayscale. \n",
-    "    - Apply Gaussian blurring \n",
-    "2. Extract the edges using the canny method and mask the triangular region \n",
-    "    - For region masking, I did not want to simply hard-code the apex and left/right edge points. So, with some googling around and trial/error, I was able to generalize the region masking's apex, left/ and right coordinates.\n",
+ ### My pipeline consists of 5 main steps:,
+    1. Sanitize the image
+        - Convert the image from RBG to grayscale.,
+        - Apply Gaussian blurring,
+    2. Extract the edges using the canny method and mask the triangular region,
+        - For region masking, I did not want to simply hard-code the apex and left/right edge points. So, with some googling around and trial/error, I was able to generalize the region masking's apex, left/ and right coordinates,
     "3. Detect the lines using the Hough transform\n",
     "    - I found that values like rho, theta, etc where quite elastic to change.\n",
     "4. Extract the left and right lane markings\n",
