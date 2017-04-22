@@ -142,4 +142,4 @@ The model was able to correctly guess 0 of the 5 traffic signs, which gives an a
 
 
 
-
+Despite being wrong 5 times in a row, the model was quite certain about all of its predictions. A confident idiot ;)
