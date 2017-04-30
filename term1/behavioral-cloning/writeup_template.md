@@ -16,16 +16,6 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 
-[//]: # (Image References)
-
-[image1]: ./examples/placeholder.png "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
-
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
@@ -79,7 +69,10 @@ The overall strategy for deriving a model architecture was to add 3 convolutiona
 
 I split my data into a training set and validation set.
 
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. - fill in
+For the first convolutional layer, I used 18 filters, 9 * 9 kernals, 4 * 4 strides, and same padding and elu activation
+For the second convolutional layer, I used 30 filters, 5 * 5 kernals, 2 * 2 strides, and same padding and elu activation
+For the third convolutional layer, I used 64 filters, 6 * 6 kernals, 2 * 2 strides, and same padding and elu activation
+
 
 
 ####2. Final Model Architecture
@@ -92,11 +85,11 @@ Pre-processing of input data
 
 After a big of research, I cropped the images. I realized that not all parts of the image are necessary for my model, or have anything to do with driving/steering.
 I also have a habit of normalizing the data for a cleaner convergence so I did that.
-I made the images smaller, to simplify the data.
+I made the images smaller to simplify the data.
 Lastly, I shuffled the data.
 95% of the data went into the validation set.
 
 The validation set was to diagnose my model, particularly tell whether it had high bias (underfitting) or high variance (overfitting)
 
-I found that 23 epochs was ideal.
+I found that 22 epochs was ideal.
 
