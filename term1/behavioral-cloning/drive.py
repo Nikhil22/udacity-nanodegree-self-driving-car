@@ -118,7 +118,7 @@ if __name__ == '__main__':
     if model_version != keras_version:
         print('You are using Keras version ', keras_version,
               ', but the model was built using ', model_version)
-
+    print(args.model)
     model = load_model(args.model)
 
     if args.image_folder != '':
