@@ -69,7 +69,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 
 Here's the code for this :
 ```python
-    def edges(image, xt, st):
+def edges(image, xt, st):
     dx = np.absolute(cv2.Sobel(cv2.cvtColor(image, cv2.COLOR_RGB2GRAY), cv2.CV_64F, 1, 0)) 
     dx = np.uint8(255 * dx / np.max(dx))
     bins = np.zeros_like(dx)
@@ -99,29 +99,35 @@ Here's the code for this :
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
-
+I use the cv2.getPerspectiveTransform function.  My src and dst were made from 2 variables I declared:
 ```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
+SRC_PTS = [[140, 720],[550, 470],[700, 470],[1160, 720]]
+DST_PTS = [[200,720],[200,0],[1080,0],[1080,720]]
+```
+Here's the full code snippet
+```python
+pts = np.array([[(0,shape[0]),(550, 470), (700, 470), (shape[1],shape[0])]], dtype=np.int32)
+masked_img = mask_region(edged_img, pts)
+plt.imshow(masked_img, cmap="gray")
+
+src = np.float32(SRC_PTS)
+dst = np.float32(DST_PTS)
+
+Minv = cv2.getPerspectiveTransform(dst, src)
+
+b_eye = cv2.warpPerspective(edged_img, cv2.getPerspectiveTransform(src, dst), (shape[1], shape[0]), flags=cv2.INTER_LINEAR)
+plt.imshow(b_eye, cmap="gray")
+cv2.imwrite('output_images/test1_birdseye.jpg',b_eye)
 ```
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 140, 720      | 200, 720       | 
+| 550, 700      | 200, 0      |
+| 700, 470      | 1080, 0      |
+| 1160, 720     | 1080, 720        |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
@@ -129,8 +135,24 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+Here's a code snippet to get the birds eye view of the road:
+```python
+from scipy import signal
 
+lx, ly, rx, ry = histo(b_eye, x_offset=x_offset)
+
+lf, lcs = fit_polynomial(ly, lx)
+rf, rcs = fit_polynomial(ry, rx)
+
+plt.plot(lf, ly, color='red', linewidth=3)
+plt.plot(rf, ry, color='red', linewidth=3)
+plt.imshow(b_eye, cmap="gray")
+
+# polyfit_left = draw_polynomial(slate, lane_poly, lcs, 30)
+b_eye_poly = draw_polynomial(draw_polynomial(slate, polynomial_lines, lcs, 30), polynomial_lines, rcs, 30)
+cv2.imwrite('output_images/test1_birdseye_poly.jpg',b_eye_poly)
+plt.imshow(b_eye_poly, cmap="gray")
+```
 ![alt text][image5]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
@@ -139,7 +161,28 @@ I did this in lines # through # in my code in `my_other_file.py`
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+```python
+def pos_cen(y, left_poly, right_poly):
+    center = (1.5 * polynomial_lines(y, left_poly)
+              - polynomial_lines(y, right_poly)) / 2
+    return center
+
+lc_radius = np.absolute(((1 + (2 * lcs[0] * 500 + lcs[1])**2) ** 1.5) \
+                /(2 * lcs[0]))
+rc_radius = np.absolute(((1 + (2 * rcs[0] * 500 + rcs[1]) ** 2) ** 1.5) \
+                 /(2 * rcs[0]))
+
+ll_img = cv2.add( \
+    cv2.warpPerspective( \
+        painted_b_eye, Minv, (shape[1], shape[0]), flags=cv2.INTER_LINEAR \
+    ), undistorted \
+) 
+plt.imshow(ll_img)
+annotate(ll_img, curvature=(lc_radius + rc_radius) / 2, 
+                     pos=pos_cen(719, lcs, rcs), 
+                     curve_min=min(lc_radius, rc_radius))
+plt.imshow(ll_img)
+```
 
 ![alt text][image6]
 
@@ -157,4 +200,6 @@ Here's a [link to my video result](./project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+I had a little trouble with keeping the highlighted lane area exactly over the lane lines at first. 
+My pipeline may fail in snowy conditions where lane lines are blocked. The edge detection algorithm would not be able to find lines.
+An improvement could be to look for a general area of where lane lines are most likely to be located, rather than explictly looking for them.
