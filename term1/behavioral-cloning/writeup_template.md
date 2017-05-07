@@ -53,6 +53,8 @@ My fully connected layers have elu activation as well.
 
 The model contains dropout layers in order to reduce overfitting. The first fully connected layer has a dropout of 0.5.
 
+I originally trained with 22 epochs. This was clearly too high, as my loss was oscilating back and forth rather tahn gradually decreasing. This indicated that my model was overfitting. I eventually settled on an epoch number of 5.
+
 ####3. Model parameter tuning
 
 I used an Adam optimizer.
@@ -89,7 +91,9 @@ I made the images smaller to simplify the data.
 Lastly, I shuffled the data.
 95% of the data went into the validation set.
 
+At first, I used only the centre camera images. This did not result in a very good driving simulation, as my car eventually ended up veering off to the left. To correct this, I took all three camera images, and added a correction of 0.2.
+
 The validation set was to diagnose my model, particularly tell whether it had high bias (underfitting) or high variance (overfitting)
 
-I found that 22 epochs was ideal.
+I found that 5 epochs was ideal.
 
