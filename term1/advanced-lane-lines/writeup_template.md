@@ -25,7 +25,7 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/beye1.png "Birds eye 1"
 [image5]: ./output_images/beye2.png "Birds eye 2"
 [image6]: ./output_images/final.png "Output"
-[video1]: ./project_video.mp4 "Video"
+[video1]: ./project_output_colour.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -94,7 +94,6 @@ def edges(image, xt, st):
     cv2.imwrite('output_images/test1_edges.jpg',edged_img)
     plt.imshow(edged_img, cmap="gray")
 ```
- Example image output
 ![alt text][image3]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
@@ -131,7 +130,6 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
- Example image output
 ![alt text][image4]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
@@ -154,7 +152,6 @@ b_eye_poly = draw_polynomial(draw_polynomial(slate, polynomial_lines, lcs, 30), 
 cv2.imwrite('output_images/test1_birdseye_poly.jpg',b_eye_poly)
 plt.imshow(b_eye_poly, cmap="gray")
 ```
- Example image output
 ![alt text][image5]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
@@ -184,7 +181,6 @@ plt.imshow(ll_img)
 
 #### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-Example image output
 ![alt text][image6]
 
 ---
