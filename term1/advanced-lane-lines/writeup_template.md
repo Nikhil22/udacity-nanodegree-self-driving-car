@@ -25,7 +25,7 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/beye1.png "Birds eye 1"
 [image5]: ./output_images/beye2.png "Birds eye 2"
 [image6]: ./output_images/final.png "Output"
-[video1]: ./project_output_color.mp4 "Video"
+[video1]: ./project_output_colour.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
@@ -189,7 +189,7 @@ plt.imshow(ll_img)
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_output_color.mp4)
+Here's a [link to my video result](./project_output_colour.mp4)
 
 ---
 
