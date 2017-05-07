@@ -71,11 +71,9 @@ The overall strategy for deriving a model architecture was to add 3 convolutiona
 
 I split my data into a training set and validation set.
 
-For the first convolutional layer, I used 18 filters, 9 * 9 kernals, 4 * 4 strides, and same padding and elu activation
-For the second convolutional layer, I used 30 filters, 5 * 5 kernals, 2 * 2 strides, and same padding and elu activation
-For the third convolutional layer, I used 64 filters, 6 * 6 kernals, 2 * 2 strides, and same padding and elu activation
-
-
+For the first convolutional layer, I used 16 filters, 8 * 8 kernals, 4 * 4 strides, and same padding and elu activation
+For the second convolutional layer, I used 32 filters, 5 * 5 kernals, 2 * 2 strides, and same padding and elu activation
+For the third convolutional layer, I used 62 filters, 5 * 5 kernals, 2 * 2 strides, and same padding and elu activation
 
 ####2. Final Model Architecture
 
