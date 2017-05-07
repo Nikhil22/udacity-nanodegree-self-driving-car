@@ -96,7 +96,10 @@ The validation set was to diagnose my model, particularly tell whether it had hi
 I found that 5 epochs was ideal.
 
 ####Images - My dataset
-The image at the path images/center.jpg is centre camera image, with a steering of 0
-The image at the path images/left/jpg is a left camera image, with a steering of 0
-The image at the path images/right.jpg is a right camera image, with a steering of -0.0787459
+
+The image at the path images/center.jpg is centre camera image, with a steering of 0.
+
+The image at the path images/left/jpg is a left camera image, with a steering of 0.
+
+The image at the path images/right.jpg is a right camera image, with a steering of -0.0787459.
 
