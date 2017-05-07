@@ -159,10 +159,6 @@ plt.imshow(b_eye_poly, cmap="gray")
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
-
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
-
 ```python
 def pos_cen(y, left_poly, right_poly):
     center = (1.5 * polynomial_lines(y, left_poly)
@@ -186,7 +182,9 @@ annotate(ll_img, curvature=(lc_radius + rc_radius) / 2,
 plt.imshow(ll_img)
 ```
 
- Example image output
+#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+
+Example image output
 ![alt text][image6]
 
 ---
