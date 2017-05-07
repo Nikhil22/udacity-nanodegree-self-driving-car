@@ -60,11 +60,40 @@ The code for this step is contained in the first code cell of the IPython notebo
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
 
-
+1. Peform a camera calibration using cv2.calibrateCamera -> ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(object_pts, img_points, (img.shape[1], img.shape[0]),None,None)
+2. call cv2.undistort using mtx, dist from step 1 -> cv2.undistort(orig, mtx, dist, None, mtx)
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image (code snippet below).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+
+Here's the code for this :
+```python
+    def edges(image, xt, st):
+    dx = np.absolute(cv2.Sobel(cv2.cvtColor(image, cv2.COLOR_RGB2GRAY), cv2.CV_64F, 1, 0)) 
+    dx = np.uint8(255 * dx / np.max(dx))
+    bins = np.zeros_like(dx)
+    bins[(dx >= xt[0]) & (dx <= xt[1])] = 1
+    sc = cv2.cvtColor(image, cv2.COLOR_RGB2HLS)[:,:,2]
+    bins2 = np.zeros_like(sc)
+    bins2[(sc >= st[0]) & (sc <= st[1])] = 1
+    out = np.zeros_like(bins)
+    out[(bins2 == 1) | (bins == 1)] = 1
+    return out
+
+    shape = orig.shape
+    half = orig.shape[1] // 2
+
+    slate = np.zeros((800, 1300))
+    c_slate = cv2.cvtColor(slate.astype(np.uint8), cv2.COLOR_GRAY2RGB)
+
+    xt = original_xt
+    st = original_st
+
+    edged_img = edges(undistorted, xt, st)
+    cv2.imwrite('output_images/test1_edges.jpg',edged_img)
+    plt.imshow(edged_img, cmap="gray")
+```
 
 ![alt text][image3]
 
