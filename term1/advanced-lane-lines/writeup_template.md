@@ -19,7 +19,7 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/undistort_output.png "Undistorted"
+[image1]: ./output-images/calibration5_undistorted.jpg "Undistorted"
 [image2]: ./test_images/test1.jpg "Road Transformed"
 [image3]: ./examples/binary_combo_example.jpg "Binary Example"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
@@ -65,7 +65,7 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (code snippet below).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I used a combination of color and gradient thresholds to generate a binary image (code snippet below).  Here's an example of my output for this step. 
 
 Here's the code for this :
 ```python
@@ -94,7 +94,7 @@ def edges(image, xt, st):
     cv2.imwrite('output_images/test1_edges.jpg',edged_img)
     plt.imshow(edged_img, cmap="gray")
 ```
-
+ Example image output
 ![alt text][image3]
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
@@ -131,6 +131,7 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
+ Example image output
 ![alt text][image4]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
@@ -153,6 +154,7 @@ b_eye_poly = draw_polynomial(draw_polynomial(slate, polynomial_lines, lcs, 30), 
 cv2.imwrite('output_images/test1_birdseye_poly.jpg',b_eye_poly)
 plt.imshow(b_eye_poly, cmap="gray")
 ```
+ Example image output
 ![alt text][image5]
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
@@ -184,6 +186,7 @@ annotate(ll_img, curvature=(lc_radius + rc_radius) / 2,
 plt.imshow(ll_img)
 ```
 
+ Example image output
 ![alt text][image6]
 
 ---
@@ -192,7 +195,7 @@ plt.imshow(ll_img)
 
 #### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./project_output_color.mp4)
 
 ---
 
