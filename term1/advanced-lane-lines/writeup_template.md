@@ -25,7 +25,7 @@ The goals / steps of this project are the following:
 [image4]: ./output_images/beye1.png "Birds eye 1"
 [image5]: ./output_images/beye2.png "Birds eye 2"
 [image6]: ./output_images/final.png "Output"
-[video1]: ./project_output_colour.mp4 "Video"
+[video1]: ./project_output_color.mp4 "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 
