@@ -44,7 +44,9 @@ The model.py file contains the code for training and saving the convolution neur
 
 ####1. An appropriate model architecture has been employed
 
-My model consists of a 3 convolutional layers and 2 fully connected layers. The convolutional layers have a SAME padding, elu activation and 4 by 4 stride.
+My model consists of a 3 convolutional layers and 2 fully connected layers. 
+
+The convolutional layers have a SAME padding & elu activation
 
 My fully connected layers have elu activation as well.
 
@@ -53,7 +55,7 @@ My fully connected layers have elu activation as well.
 
 The model contains dropout layers in order to reduce overfitting. The first fully connected layer has a dropout of 0.5.
 
-I originally trained with 22 epochs. This was clearly too high, as my loss was oscilating back and forth rather tahn gradually decreasing. This indicated that my model was overfitting. I eventually settled on an epoch number of 5.
+I originally trained with 22 epochs. This was clearly too high, as my loss was oscilating back and forth rather than gradually decreasing. This indicated that my model was overfitting. I eventually settled on an epoch number of 5.
 
 ####3. Model parameter tuning
 
@@ -71,13 +73,39 @@ The overall strategy for deriving a model architecture was to add 3 convolutiona
 
 I split my data into a training set and validation set.
 
-For the first convolutional layer, I used 16 filters, 8 * 8 kernals, 4 * 4 strides, and same padding and elu activation
-For the second convolutional layer, I used 32 filters, 5 * 5 kernals, 2 * 2 strides, and same padding and elu activation
-For the third convolutional layer, I used 62 filters, 5 * 5 kernals, 2 * 2 strides, and same padding and elu activation
+For the first convolutional layer, I used 16 filters, 8 X 8 kernals, 4 X 4 strides, and same padding and elu activation
+For the second convolutional layer, I used 32 filters, 5 X 5 kernals, 2 X 2 strides, and same padding and elu activation
+For the third convolutional layer, I used 62 filters, 5 X 5 kernals, 2 X 2 strides, and same padding and elu activation
 
 ####2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+Here is a code snippet of my final model architecture:
+```python
+#crop
+model.add(Cropping2D(cropping=CROPPING_DIMS, 
+                     dim_ordering='tf',  
+                     input_shape=INPUT_SHAPE)) 
+
+# normalize
+model.add(Lambda(lambda x: (x/255.0) - 0.5))
+
+# add convolutional layers 
+model.add(Convolution2D(*CONV_1, subsample=(4, 4), border_mode="same")) 
+model.add(ELU()) 
+model.add(Convolution2D(*CONV_2, subsample=(2, 2), border_mode="same")) 
+model.add(ELU()) 
+model.add(Convolution2D(*CONV_3, subsample=(2, 2), border_mode="same")) 
+model.add(Flatten()) 
+model.add(ELU()) 
+
+# add fully connected layers
+model.add(Dense(FULLY_CONNECTED_LAYER1)) 
+model.add(Dropout(DROPOUT)) 
+model.add(ELU()) 
+model.add(Dense(FULLY_CONNECTED_LAYER2)) 
+model.add(ELU()) 
+model.add(Dense(FULLY_CONNECTED_LAYER3)) 
+```
 
 ####3. Creation of the Training Set & Training Process
 
@@ -95,11 +123,19 @@ The validation set was to diagnose my model, particularly tell whether it had hi
 
 I found that 5 epochs was ideal.
 
+[//]: # (Image References)
+
+[image1]: ./images/center.jpg 
+[image2]: ./images/left.jpg 
+[image3]: ./images/right.jpg 
+
 ####Images - My dataset
 
-The image at the path images/center.jpg is centre camera image, with a steering of 0.
+centre camera image, with a steering of 0.
+![alt text][image1]
 
-The image at the path images/left/jpg is a left camera image, with a steering of 0.
+ left camera image, with a steering of 0.
+![alt text][image2]
 
-The image at the path images/right.jpg is a right camera image, with a steering of -0.0787459.
-
+right camera image, with a steering of -0.0787459.
+![alt text][image3]
