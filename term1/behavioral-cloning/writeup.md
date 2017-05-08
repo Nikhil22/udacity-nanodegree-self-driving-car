@@ -132,10 +132,13 @@ I found that 5 epochs was ideal.
 ####Images - My dataset
 
 centre camera image, with a steering of 0.
+
 ![alt text][image1]
 
  left camera image, with a steering of 0.
+ 
 ![alt text][image2]
 
 right camera image, with a steering of -0.0787459.
+
 ![alt text][image3]
