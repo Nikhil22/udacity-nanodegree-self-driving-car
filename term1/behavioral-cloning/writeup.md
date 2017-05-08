@@ -128,8 +128,13 @@ I found that 5 epochs was ideal.
 [image1]: ./images/center.jpg 
 [image2]: ./images/left.jpg 
 [image3]: ./images/right.jpg 
+[vid]: ./run2.mp4
 
-####Images - My dataset
+# Final output
+
+[![Watch the video](./run2.mp4)
+
+## Images - My dataset
 
 centre camera image, with a steering of 0.
 
