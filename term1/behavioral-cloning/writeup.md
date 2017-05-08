@@ -128,11 +128,10 @@ I found that 5 epochs was ideal.
 [image1]: ./images/center.jpg 
 [image2]: ./images/left.jpg 
 [image3]: ./images/right.jpg 
-[vid]: ./run2.mp4
 
-# Final output
+## Final output
 
-[![Watch the video](./run2.mp4)
+![demo](run2.gif)
 
 ## Images - My dataset
 
