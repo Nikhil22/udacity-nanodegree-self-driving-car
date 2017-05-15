@@ -200,3 +200,5 @@ Here's a [link to my video result](./project_output_colour.mp4)
 I had a little trouble with keeping the highlighted lane area exactly over the lane lines at first. 
 My pipeline may fail in snowy conditions where lane lines are blocked. The edge detection algorithm would not be able to find lines.
 An improvement could be to look for a general area of where lane lines are most likely to be located, rather than explictly looking for them.
+
+I tried my pipeline for the challenge video. For the most part the lane area was highlighted accurately, but there was quite a bit of flickering in the highlighting. 
