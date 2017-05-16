@@ -67,32 +67,39 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 
 I used a combination of color and gradient thresholds to generate a binary image (code snippet below).  Here's an example of my output for this step. 
 
+I used the HLS, LUV and Lab channels for this. I found that combining all 3 allowed me to better identify the yellow and white lane lines
+
 Here's the code for this :
 ```python
-def edges(image, xt, st):
-    dx = np.absolute(cv2.Sobel(cv2.cvtColor(image, cv2.COLOR_RGB2GRAY), cv2.CV_64F, 1, 0)) 
-    dx = np.uint8(255 * dx / np.max(dx))
-    bins = np.zeros_like(dx)
-    bins[(dx >= xt[0]) & (dx <= xt[1])] = 1
-    sc = cv2.cvtColor(image, cv2.COLOR_RGB2HLS)[:,:,2]
-    bins2 = np.zeros_like(sc)
-    bins2[(sc >= st[0]) & (sc <= st[1])] = 1
-    out = np.zeros_like(bins)
-    out[(bins2 == 1) | (bins == 1)] = 1
-    return out
+def apply_binary_thresholds(img, thresholds={  \
+      's': {'min': 180, 'max': 255}, \
+      'l': {'min': 255, 'max': 255},   \
+      'b': {'min': 155, 'max': 200}  \
+    } , should_display=True): 
+    
+    S = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)[:,:,2]  
+    L = cv2.cvtColor(img, cv2.COLOR_BGR2LUV)[:,:,0]
+    B = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)[:,:,2] 
 
-    shape = orig.shape
-    half = orig.shape[1] // 2
+    s_bin = np.zeros_like(S)
+    s_bin[(S >= thresholds['s']['min']) & (S <= thresholds['s']['max'])] = 1
+    b_bin = np.zeros_like(B)
+    b_bin[(B >= thresholds['b']['min']) & (B <= thresholds['b']['max'])] = 1
+    l_bin = np.zeros_like(L)
+    l_bin[(L >= thresholds['l']['min']) & (L <= thresholds['l']['max'])] = 1
+    
+    full_bin = np.zeros_like(s_bin)
+    full_bin[(l_bin == 1) | (b_bin == 1) | (s_bin == 1)] = 1
 
-    slate = np.zeros((800, 1300))
-    c_slate = cv2.cvtColor(slate.astype(np.uint8), cv2.COLOR_GRAY2RGB)
-
-    xt = original_xt
-    st = original_st
-
-    edged_img = edges(undistorted, xt, st)
-    cv2.imwrite('output_images/test1_edges.jpg',edged_img)
-    plt.imshow(edged_img, cmap="gray")
+    if should_display is True:
+        f, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 6))
+        f.tight_layout()
+        ax1.set_title('original image', fontsize=16)
+        ax1.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB).astype('uint8'))
+        ax2.set_title('all thresholds', fontsize=16)
+        ax2.imshow(full_bin, cmap='gray')
+        
+    return full_bin
 ```
 ![alt text][image3]
 
@@ -100,33 +107,40 @@ def edges(image, xt, st):
 
 I use the cv2.getPerspectiveTransform function.  My src and dst were made from 2 variables I declared:
 ```python
-SRC_PTS = [[140, 720],[550, 470],[700, 470],[1160, 720]]
-DST_PTS = [[200,720],[200,0],[1080,0],[1080,720]]
+SRC_PTS = [[490, 482],[810, 482],[1250, 720], [40, 720]]
+DST_PTS = [[0, 0], [1280, 0],[1250, 720], [40, 720]]
 ```
 Here's the full code snippet
 ```python
-pts = np.array([[(0,shape[0]),(550, 470), (700, 470), (shape[1],shape[0])]], dtype=np.int32)
-masked_img = mask_region(edged_img, pts)
-plt.imshow(masked_img, cmap="gray")
-
-src = np.float32(SRC_PTS)
-dst = np.float32(DST_PTS)
-
-Minv = cv2.getPerspectiveTransform(dst, src)
-
-b_eye = cv2.warpPerspective(edged_img, cv2.getPerspectiveTransform(src, dst), (shape[1], shape[0]), flags=cv2.INTER_LINEAR)
-plt.imshow(b_eye, cmap="gray")
-cv2.imwrite('output_images/test1_birdseye.jpg',b_eye)
+def apply_birds_eye(img, should_display=True):
+    img_shape = (img.shape[1], img.shape[0])
+    
+    src = np.float32(SRC_PTS)
+    dst = np.float32(DST_PTS)
+    
+    M = cv2.getPerspectiveTransform(src, dst)
+    Minv = cv2.getPerspectiveTransform(dst, src)
+    warped = cv2.warpPerspective(img, M, img_shape)
+    
+    if should_display is True:
+        f, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 6))
+        f.tight_layout()
+        ax1.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        ax1.set_title('Undistorted Image', fontsize=20)
+        ax2.imshow(cv2.cvtColor(warped, cv2.COLOR_BGR2RGB))
+        ax2.set_title('Warped Image', fontsize=20)
+        plt.subplots_adjust(left=0., right=1, top=0.9, bottom=0.)
+    return warped, M, Minv
 ```
 
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 140, 720      | 200, 720       | 
-| 550, 700      | 200, 0      |
-| 700, 470      | 1080, 0      |
-| 1160, 720     | 1080, 720        |
+| 490, 482      | 0, 0          | 
+| 810, 482      | 1280, 0       |
+| 1250, 620     | 1250, 720     |
+| 40, 720       | 40, 720       |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
@@ -134,23 +148,50 @@ I verified that my perspective transform was working as expected by drawing the 
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Here's a code snippet to get the birds eye view of the road:
+I created a histogram of the image, found the left and right peaks and accordingly appended my left and right cooridnate arrays.
+
+Here's a code snippet.
 ```python
-from scipy import signal
+hist = np.sum( \
+            img[ \
+                int( \
+                     ry \
+                ):int( \
+                    ly \
+                ), int(x_offset):int(width - x_offset) \
+            ], axis=0 \
+        )
 
-lx, ly, rx, ry = histo(b_eye, x_offset=x_offset)
+        smoothened = signal.medfilt(hist, kernal_size)
 
-lf, lcs = fit_polynomial(ly, lx)
-rf, rcs = fit_polynomial(ry, rx)
+        lt = np.array(signal.find_peaks_cwt(smoothened[:half], np.arange(1, 10)))
+        rt = np.array(signal.find_peaks_cwt(smoothened[half:], np.arange(1, 10)))
+        
+        print("lt", lt)
+        print("rt", rt)
 
-plt.plot(lf, ly, color='red', linewidth=3)
-plt.plot(rf, ry, color='red', linewidth=3)
-plt.imshow(b_eye, cmap="gray")
+        if len(lt) > 0:
+            lxm.append(max(lt))
 
-# polyfit_left = draw_polynomial(slate, lane_poly, lcs, 30)
-b_eye_poly = draw_polynomial(draw_polynomial(slate, polynomial_lines, lcs, 30), polynomial_lines, rcs, 30)
-cv2.imwrite('output_images/test1_birdseye_poly.jpg',b_eye_poly)
-plt.imshow(b_eye_poly, cmap="gray")
+        if len(rt) > 0:
+            rxm.append(max(rt) + half)
+
+        if len(lt) > 0 or len(rt) > 0:
+            ym.append((ly + ry) // 2)
+            
+        for lx_centre, centre_y in zip(lxm, ym):
+            left_x_additional, left_y_additional = get_pxs(img, lx_centre,
+                                                                       centre_y, g_rad // 2)
+
+            lx_arr.append(left_x_additional)
+            ly_arr.append(left_y_additional)
+    
+        for rx_centre, centre_y in zip(rxm, ym):
+            right_x_additional, right_y_additional = get_pxs(img, rx_centre,
+                                                                         centre_y, g_rad // 2)
+            
+            rx_arr.append(right_x_additional)
+            ry_arr.append(right_y_additional)
 ```
 ![alt text][image5]
 
