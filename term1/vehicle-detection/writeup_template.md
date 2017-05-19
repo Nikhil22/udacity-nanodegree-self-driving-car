@@ -26,7 +26,7 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [one]: ./output_images/one.png 
-[two]: ./output_images/two.jpg 
+[two]: ./output_images/two.png 
 [three]: ./output_images/three.png 
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
@@ -77,7 +77,7 @@ def get_hog_features(img, cspace):
 
 ####2. Explain how you settled on your final choice of HOG parameters.
 
-First, I defined a function extract_features get_hog_features. This function loops through all images, and creates an array of hogs features of each image. This array is then used as the feature array for training. Here's a code snippet:
+First, I defined a function extract_features get_hog_features. This function loops through all images, and creates an array of hogs features of each image. This array is then used as the feature array for training.  Here's a code snippet:
 
 ```python
 def extract_features(imgs, cspace='RGB', size = (64,64)):
@@ -97,8 +97,7 @@ def extract_features(imgs, cspace='RGB', size = (64,64)):
 
 
 Of all color spaces, YUV was the best at detecting vehicles. 
-
-Then I normalized and split by data into train and test sets.
+I normalized and split by data into train and test sets.
 
 ####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
@@ -113,13 +112,43 @@ I trained using both an SVM and an MLP. MLP had a higher test accuracy. Here are
 
 ####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I did a bit of research to come up with an efficient and accurate sliding window algorithm.
+I did a bit of research to look for and modify an efficient and accurate sliding window algorithm.
 
 1. get HOGS features for each window
 2. only search for vehicle in the bottom half of image
 3. multiple window scaled, to ensure we detect both closeby and distant images. 
+4. 80% xy overlap, through trial and error
+
+```python
+def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None], 
+                    xy_window=(64, 64), xy_overlap=(0.75, 0.75)):
+    if x_start_stop[0] == None:
+        x_start_stop[0] = 0
+    if x_start_stop[1] == None:
+        x_start_stop[1] = img.shape[1]
+    if y_start_stop[0] == None:
+        y_start_stop[0] = 0
+    if y_start_stop[1] == None:
+        y_start_stop[1] = img.shape[0]
+    xspan = x_start_stop[1] - x_start_stop[0]
+    yspan = y_start_stop[1] - y_start_stop[0]
+    nx_pix_per_step = np.int(xy_window[0]*(1 - xy_overlap[0]))
+    ny_pix_per_step = np.int(xy_window[1]*(1 - xy_overlap[1]))
+    nx_windows = np.int(xspan/nx_pix_per_step) 
+    ny_windows = np.int(yspan/ny_pix_per_step)
+    window_list = []
+    for ys in range(ny_windows):
+        for xs in range(nx_windows):
+            startx = xs*nx_pix_per_step + x_start_stop[0]
+            endx = (xs+1)*nx_pix_per_step + x_start_stop[0]
+            starty = ys*ny_pix_per_step + y_start_stop[0]
+            endy = (ys+1)*ny_pix_per_step + y_start_stop[0]
+            window_list.append(((startx, starty), (endx, endy)))
+    return window_list
+```
 
 ![alt text][one]
+![alt text][three]
 ---
 
 ### Video Implementation
