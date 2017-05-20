@@ -1,18 +1,4 @@
-##Writeup Template
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Vehicle Detection Project**
-
-The goals / steps of this project are the following:
-
-* Perform a Histogram of Oriented Gradients (HOG) feature extraction on a labeled training set of images and train a classifier Linear SVM classifier
-* Optionally, you can also apply a color transform and append binned color features, as well as histograms of color, to your HOG feature vector. 
-* Note: for those first two steps don't forget to normalize your features and randomize a selection for training and testing.
-* Implement a sliding-window technique and use your trained classifier to search for vehicles in images.
-* Run your pipeline on a video stream (start with the test_video.mp4 and later implement on full project_video.mp4) and create a heat map of recurring detections frame by frame to reject outliers and follow detected vehicles.
-* Estimate a bounding box for vehicles detected.
+**Vehicle Detection**
 
 [//]: # (Image References)
 [image1]: ./examples/car_not_car.png
@@ -29,21 +15,10 @@ The goals / steps of this project are the following:
 [two]: ./output_images/two.png 
 [three]: ./output_images/three.png 
 
-## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
-###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
----
-###Writeup / README
+## Histogram of Oriented Gradients (HOG)
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Vehicle-Detection/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
-
-You're reading it!
-
-###Histogram of Oriented Gradients (HOG)
-
-####1. Explain how (and identify where in your code) you extracted HOG features from the training images. 
-
-Example of vehicle and non vehicle
+Example of vehicle and non vehicle"
 
 ![alt text][image1]
 
@@ -75,7 +50,7 @@ def get_hog_features(img, cspace):
 
 ![alt text][two]
 
-####2. Explain how you settled on your final choice of HOG parameters.
+### 2. Final choice of HOG parameters.
 
 First, I defined a function extract_features get_hog_features. This function loops through all images, and creates an array of hogs features of each image. This array is then used as the feature array for training.  Here's a code snippet:
 
@@ -99,7 +74,7 @@ def extract_features(imgs, cspace='RGB', size = (64,64)):
 Of all color spaces, YUV was the best at detecting vehicles. 
 I normalized and split by data into train and test sets.
 
-####3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
+### 3. Training a classifier using selected HOG features.
 
 I trained using both an SVM and an MLP. MLP had a higher test accuracy. Here are the results. 
 
@@ -110,7 +85,7 @@ I trained using both an SVM and an MLP. MLP had a higher test accuracy. Here are
 
 ###Sliding Window Search
 
-####1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
+### 1. Sliding window search, scales, and overlaps. 
 
 I did a bit of research to look for and modify an efficient and accurate sliding window algorithm.
 
@@ -153,21 +128,13 @@ def slide_window(img, x_start_stop=[None, None], y_start_stop=[None, None],
 
 ### Video Implementation
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (somewhat wobbly or unstable bounding boxes are ok as long as you are identifying the vehicles most of the time with minimal false positives.)
-
 Here's a [link to my video result](./result.mp4)
-
-
-####2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
 The MLP has a method called predict_proba which returns the confidence/probability of each class.
 Only classifications with a score >0.99 where chosen.
 
----
 
-###Discussion
-
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+### Aftermath
 
 This pipleline may fail when trying to deteced motorcycles or bicycles. To fix this, we would have to append our trainining and test sets with images of classified images of bikes, etc and adjust our feature extraction algorithm.
 
