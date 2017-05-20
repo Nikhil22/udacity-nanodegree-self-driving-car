@@ -21,6 +21,8 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/final.png "Output"
 [video1]: ./project_output_colour.mp4 "Video"
 
+![alt text][image6]
+
 
 ### Camera Calibration
 
