@@ -2,7 +2,7 @@
 
 ## Final output
 
-![alt text]['./out.png']
+![alt text]['out.png']
 
  ### My pipeline consists of 5 main steps:
     1. Sanitize the image
