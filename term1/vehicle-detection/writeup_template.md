@@ -1,4 +1,4 @@
-**Vehicle Detection**
+# **Vehicle Detection**
 
 [//]: # (Image References)
 [image1]: ./examples/car_not_car.png
@@ -14,6 +14,10 @@
 [one]: ./output_images/one.png 
 [two]: ./output_images/two.png 
 [three]: ./output_images/three.png 
+
+## Final output
+
+![demo](result.gif)
 
 
 ## Histogram of Oriented Gradients (HOG)
