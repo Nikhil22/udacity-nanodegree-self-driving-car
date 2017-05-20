@@ -1,5 +1,9 @@
 # **Finding Lane Lines on the Road** 
 
+## Final output
+
+![alt text]['./out.png']
+
  ### My pipeline consists of 5 main steps:
     1. Sanitize the image
         - Convert the image from RBG to grayscale
