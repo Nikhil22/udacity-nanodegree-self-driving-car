@@ -1,10 +1,4 @@
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
-**Advanced Lane Finding Project**
+# **Advanced Lane Finding Project**
 
 The goals / steps of this project are the following:
 
@@ -27,21 +21,10 @@ The goals / steps of this project are the following:
 [image6]: ./output_images/final.png "Output"
 [video1]: ./project_output_colour.mp4 "Video"
 
-## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
-
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
-
----
-
-### Writeup / README
-
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
-
-You're reading it!
 
 ### Camera Calibration
 
-#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+#### 1. Compute the camera matrix and distortion coefficients. 
 
 The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
 
@@ -55,7 +38,7 @@ The code for this step is contained in the first code cell of the IPython notebo
 
 ### Pipeline (single images)
 
-#### 1. Provide an example of a distortion-corrected image.
+#### 1. Example of a distortion-corrected image.
 
 To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
@@ -63,7 +46,7 @@ To demonstrate this step, I will describe how I apply the distortion correction 
 1. Peform a camera calibration using cv2.calibrateCamera -> ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(object_pts, img_points, (img.shape[1], img.shape[0]),None,None)
 2. call cv2.undistort using mtx, dist from step 1 -> cv2.undistort(orig, mtx, dist, None, mtx)
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+#### 2. Color transforms, gradients etc to create a thresholded binary image.
 
 I used a combination of color and gradient thresholds to generate a binary image (code snippet below).  Here's an example of my output for this step. 
 
@@ -103,7 +86,7 @@ def apply_binary_thresholds(img, thresholds={  \
 ```
 ![alt text][image3]
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+#### 3. Perspective transform
 
 I use the cv2.getPerspectiveTransform function.  My src and dst were made from 2 variables I declared:
 ```python
@@ -146,7 +129,7 @@ I verified that my perspective transform was working as expected by drawing the 
 
 ![alt text][image4]
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+#### 4.Identify lane-line pixels and fit their positions with a polynomial
 
 I created a histogram of the image, found the left and right peaks and accordingly appended my left and right cooridnate arrays.
 
@@ -195,7 +178,7 @@ hist = np.sum( \
 ```
 ![alt text][image5]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+#### 5. Calculate the radius of curvature of the lane and the position of the vehicle with respect to center.
 
 ```python
 def pos_cen(y, left_poly, right_poly):
@@ -220,7 +203,7 @@ annotate(ll_img, curvature=(lc_radius + rc_radius) / 2,
 plt.imshow(ll_img)
 ```
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+#### 6. Result plotted back down onto the road 
 
 ![alt text][image6]
 
@@ -228,15 +211,10 @@ plt.imshow(ll_img)
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
-
 Here's a [link to my video result](./project_output_colour.mp4)
-
----
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 I had a little trouble with keeping the highlighted lane area exactly over the lane lines at first. 
 My pipeline may fail in snowy conditions where lane lines are blocked. The edge detection algorithm would not be able to find lines.
