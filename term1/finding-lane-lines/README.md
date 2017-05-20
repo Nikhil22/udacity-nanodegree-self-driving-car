@@ -1,8 +1,11 @@
 # **Finding Lane Lines on the Road** 
 
+[//]: # (Image References)
+[image1]: ./out.png 
+
 ## Final output
 
-![alt text]['out.png']
+![alt text][image1]
 
  ### My pipeline consists of 5 main steps:
     1. Sanitize the image
